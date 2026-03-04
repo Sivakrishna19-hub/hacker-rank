@@ -1,0 +1,56 @@
+import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        boolean inBlockComment = false;
+
+        while (sc.hasNextLine()) {
+            String line = sc.nextLine();
+            int i = 0;
+
+            while (i < line.length()) {
+
+                // If already inside block comment
+                if (inBlockComment) {
+                    int end = line.indexOf("*/", i);
+                    
+                    if (end != -1) {
+                        System.out.println(line.substring(i, end + 2));
+                        inBlockComment = false;
+                        i = end + 2;
+                    } else {
+                        System.out.println(line.substring(i));
+                        break;
+                    }
+                } 
+                else {
+                    int single = line.indexOf("//", i);
+                    int multi = line.indexOf("/*", i);
+
+                    if (single == -1 && multi == -1) {
+                        break;
+                    }
+
+                    if (single != -1 && (multi == -1 || single < multi)) {
+                        System.out.println(line.substring(single));
+                        break;
+                    } 
+                    else {
+                        int end = line.indexOf("*/", multi + 2);
+                        
+                        if (end != -1) {
+                            System.out.println(line.substring(multi, end + 2));
+                            i = end + 2;
+                        } else {
+                            System.out.println(line.substring(multi));
+                            inBlockComment = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        sc.close();
+    }
+}
